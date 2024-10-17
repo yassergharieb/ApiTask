@@ -1,66 +1,259 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel API Project README
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
 
-## About Laravel
+This project demonstrates the creation of a comprehensive API system using Laravel 10. The system includes user authentication via Laravel Sanctum, tag and post management, scheduled background jobs, and an advanced caching mechanism for performance optimization. The database uses SQLite, making it lightweight for development purposes.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. **User Authentication with Sanctum**:
+   - **Register** new users with name, phone number, and password.
+   - **Login** users and return an access token.
+   - Users are assigned a random 6-digit verification code upon registration.
+   - Only **verified** users can log in.
+   
+2. **Tag Management**:
+   - Authenticated users can manage tags (CRUD operations).
+   - Tag names must be unique.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+3. **Post Management**:
+   - Authenticated users can manage their own posts (CRUD operations).
+   - Posts can be **soft deleted** and restored.
+   - Posts have a **many-to-many** relationship with tags.
+   - Pinned posts are displayed first.
+   
+4. **Scheduled Jobs**:
+   - A job that **force-deletes** soft-deleted posts older than 30 days.
+   - A job that makes an HTTP request to `https://randomuser.me/api/` every six hours and logs the results.
 
-## Learning Laravel
+5. **Statistics**:
+   - A `/stats` API endpoint returns:
+     - Total number of users.
+     - Total number of posts.
+     - Number of users with zero posts.
+   - The results are cached and updated with changes to users or posts.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Installation and Setup
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. Create a New Laravel Project
+```bash
+composer create-project --prefer-dist laravel/laravel ApiTask
+```
 
-## Laravel Sponsors
+### 2. Configure SQLite Database
+Open the `.env` file and set the database connection to SQLite:
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=/path_to_your_database/database.sqlite
+```
+Create the `database.sqlite` file in the `database` folder:
+```bash
+touch database/database.sqlite
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### 3. Install Sanctum
+```bash
+composer require laravel/sanctum
+```
+Publish the Sanctum configuration:
+```bash
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+php artisan migrate
+```
+Add Sanctum's middleware to `api` middleware group in `app/Http/Kernel.php`:
+```php
+'api' => [
+    \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+    'throttle:api',
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+],
+```
 
-### Premium Partners
+### 4. Create the Authentication System
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+#### Register Route (`/register`)
+- Fields: `name`, `phone_number`, `password`
+- A 6-digit verification code is generated for every user and logged.
+- Return user data and access token after successful registration.
 
-## Contributing
+#### Login Route (`/login`)
+- Users can only log in after verifying their account with the code sent.
+- Return user data and access token upon successful login.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Verification Route
+- Endpoint to verify the code sent to the user.
 
-## Code of Conduct
+### 5. Create Tags API Resource
+- Authenticated users can **view**, **store**, **update**, and **delete** tags.
+- The `name` field is **required** and must be **unique**.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 6. Create Posts API Resource
+- Authenticated users can:
+  - View their own posts.
+  - Create new posts with:
+    - `title` (required, max 255 characters)
+    - `body` (required)
+    - `cover_image` (required on creation, optional on update)
+    - `pinned` (boolean)
+    - One or more tags (many-to-many relationship)
+  - Update and delete their posts (soft delete).
+  - View their deleted posts and restore them.
+  - Pinned posts appear first in the user's post list.
 
-## Security Vulnerabilities
+### 7. Scheduled Jobs
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#### Daily Job to Delete Soft-Deleted Posts
+- A job runs daily to force-delete posts that were soft-deleted for more than 30 days.
 
-## License
+#### Job to Log Random User API Data
+- A job runs every 6 hours, makes an HTTP request to `https://randomuser.me/api/`, and logs the result.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 8. `/stats` API Endpoint
+- Returns:
+  - Total number of users.
+  - Total number of posts.
+  - Number of users with 0 posts.
+- The data is cached and automatically updated when changes occur to users or posts.
+
+---
+
+## API Endpoints
+
+### Authentication
+
+- **POST** `/api/register`
+  - Request Body: `{ "name": "John Doe", "phone_number": "1234567890", "password": "secret" }`
+  - Response: `{ "user": { ... }, "access_token": "..." }`
+  
+- **POST** `/api/login`
+  - Request Body: `{ "phone_number": "1234567890", "password": "secret" }`
+  - Response: `{ "user": { ... }, "access_token": "..." }`
+  
+- **POST** `/api/verify`
+  - Request Body: `{ "verification_code": "123456" }`
+  - Response: `{ "message": "Account verified successfully" }`
+
+### Tags
+
+- **GET** `/api/tags`
+- **POST** `/api/tags`
+  - Request Body: `{ "name": "New Tag" }`
+- **PUT** `/api/tags/{id}`
+  - Request Body: `{ "name": "Updated Tag" }`
+- **DELETE** `/api/tags/{id}`
+
+### Posts
+
+- **GET** `/api/posts`
+- **POST** `/api/posts`
+  - Request Body: `{ "title": "New Post", "body": "Post content", "cover_image": "image.jpg", "pinned": true, "tags": [1, 2] }`
+- **GET** `/api/posts/{id}`
+- **PUT** `/api/posts/{id}`
+  - Request Body: `{ "title": "Updated Post", "body": "Updated content", "pinned": false, "tags": [1, 3] }`
+- **DELETE** `/api/posts/{id}`
+- **GET** `/api/posts/deleted`
+- **PATCH** `/api/posts/{id}/restore`
+
+### Stats
+
+- **GET** `/api/stats`
+
+---
+
+## Scheduled Jobs
+
+- **Daily Job**: Deletes soft-deleted posts older than 30 days.
+- **Every 6 Hours Job**: Fetches data from `https://randomuser.me/api/` and logs the response.
+
+---
+
+## Notes
+
+- Ensure **Laravel Sanctum** is configured correctly to handle authentication.
+- Use **SQLite** for a lightweight database configuration during development.
+- Jobs can be scheduled using Laravel's scheduler. Define the schedules in `app/Console/Kernel.php`.
+
+---
+
+To clone the project from GitHub and install the necessary dependencies using Composer, follow these steps:
+
+### Installation and Setup
+
+#### 1. Clone the Laravel Project from GitHub
+
+Run the following command to clone the repository:
+
+```bash
+git clone https://github.com/yassergharieb/ApiTask.git
+```
+
+Navigate into the project directory:
+
+```bash
+cd ApiTask
+```
+
+#### 2. Install the Dependencies
+
+After cloning the project, install all the necessary dependencies by running:
+
+```bash
+composer install
+```
+
+#### 3. Set Up the Environment
+
+1. Copy the `.env.example` file to create a new `.env` file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Open the `.env` file and update the database configuration to use **SQLite**. For example:
+
+   ```env
+   DB_CONNECTION=sqlite
+   DB_DATABASE=/path_to_your_database/database.sqlite
+   ```
+
+3. Create the SQLite database file:
+
+   ```bash
+   touch database/database.sqlite
+   ```
+
+#### 4. Run the Database Migrations
+
+Run the migrations to set up the database structure:
+
+```bash
+php artisan migrate
+```
+
+#### 5. Start the Development Server
+
+Now you can start the Laravel development server:
+
+```bash
+php artisan serve
+```
+
+Your Laravel API project should now be up and running!
+
+#### 6. Run Queue Worker (for jobs)
+
+Make sure to start the Laravel queue worker to process the scheduled jobs:
+
+```bash
+php artisan queue:work
+```
+
+#### 8. Schedule the Jobs
+
+To run scheduled jobs automatically, add the following to your server's crontab (or equivalent):
+
+```bash
+* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1
+```
