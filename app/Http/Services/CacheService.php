@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Cache;
 
 class CacheService
 {
-    protected array $keysIDontToForget = [];
 
     public function cacheStats(array $keys, int $cacheDurationMinutes, array $modelsToGetWithTrashed = [])
     {

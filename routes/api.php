@@ -32,7 +32,7 @@ Route::group(['prefix' => 'users' , 'name' => 'user'] , function () {
 
 
 Route::group(['middleware' =>  ['auth:sanctum'
-    //, 'VerifiedUser'
+    , 'VerifiedUser'
 ]] , function () {
 
     Route::resource('tags' , TagController::class)->only(['show' , "destroy" , "store"]);
