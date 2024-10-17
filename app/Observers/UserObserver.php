@@ -15,10 +15,7 @@ use function Symfony\Component\Translation\t;
 
 class UserObserver
 {
-    public function __construct(
-        public CacheService $cacheService ,
-     )
-
+    public function __construct(public CacheService $cacheService)
     {
 
     }
@@ -33,12 +30,10 @@ class UserObserver
         $verification_code            =   VerificationCode::create($data)->toArray();
         Log::channel( "verification_codes")->info("user verification_code with user_id" . $user->id ,  $verification_code);
         $chacheKeysAndModels = [
-            'posts_count' =>"Post" ,
-            "users_count" => "User" ,
-            "users_with_no_posts_count" => "User"
+            "users_count" => "User"
         ];
-
-        $this->cacheService->cacheStats($chacheKeysAndModels , 60 );
+        $this->cacheService->forgetCacheKeysCore(['users_count']);
+        $this->cacheService->cacheStats($chacheKeysAndModels , 60  , ['Post'] );
         $this->cacheService->cacheWithRelations([ "users_with_no_posts_count" => "User"]  , 60 , "whereDoesntHave:posts") ;
 
     }
@@ -58,13 +53,22 @@ class UserObserver
         foreach ($user->posts as $post) {
             $post->forceDelete();
         }
-
-        $this->cacheService->cacheStats([
-            'users_count' => "User" , "posts_count" =>  "Post"
-        ] ,
-            60  , ['Post']
-        );
+        $this->cacheService->forgetCacheKeysCore(['users_count']);
+        $this->observeForCache();
     }
 
+    private function observeForCache(array $chacheKeysAndModels = null) {
 
+        if(!$chacheKeysAndModels) {
+            $chacheKeysAndModels = [
+                'posts_count' =>"Post" ,
+                "users_count" => "User" ,
+                "users_with_no_posts_count" => "User"
+            ];
+        }
+
+        $this->cacheService->cacheStats($chacheKeysAndModels , 60 , ['Post']);
+        $this->cacheService->cacheWithRelations([ "users_with_no_posts_count" => "User"]  , 60 , "whereDoesntHave:posts");
+
+    }
 }

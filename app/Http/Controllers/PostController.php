@@ -79,7 +79,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
 
-        $bol = Post::where(['user_id' => auth()->user()->id , "id" , $post->id])->first()?->delete();
+        $bol = Post::where(['user_id' => auth()->user()->id , "id" => $post->id])->first()?->delete();
         if($bol) {
             return $this->sucsessResponse(["msg" => "post deleted successfully"]);
         } else {

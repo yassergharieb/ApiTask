@@ -8,11 +8,7 @@ use App\Models\Post;
 class PostObserver
 {
 
-    public function __construct(
-        public CacheService $cacheService ,
-
-    )
-
+    public function __construct(public CacheService $cacheService)
     {
 
     }
@@ -24,7 +20,8 @@ class PostObserver
             "users_count" => "User" ,
 
         ];
-      $this->observeForCache($chacheKeysAndModels);
+        $this->cacheService->forgetCacheKeysCore(['posts_count']);
+        $this->observeForCache($chacheKeysAndModels);
     }
 
 
@@ -36,6 +33,8 @@ class PostObserver
 
     public function deleted(Post $post): void
     {
+        $this->cacheService->forgetCacheKeysCore(['posts_counts']);
+        $this->observeForCache();
 
     }
 
@@ -50,8 +49,7 @@ class PostObserver
                 "users_with_no_posts_count" => "User"
             ];
         }
-
-        $this->cacheService->cacheStats($chacheKeysAndModels , 60);
+        $this->cacheService->cacheStats($chacheKeysAndModels , 60 , ['Post']);
         $this->cacheService->cacheWithRelations([ "users_with_no_posts_count" => "User"]  , 60 , "whereDoesntHave:posts");
 
     }
