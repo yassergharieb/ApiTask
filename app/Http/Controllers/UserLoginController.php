@@ -22,4 +22,14 @@ class UserLoginController extends Controller
              return  $this->sucsessResponse(['user' => $user , 'token' => $token]);
         }
     }
+
+
+    public function destroy()
+    {
+        $user =  User::where("id" , auth()->user()->id)->first();
+        $user->tokens()->delete();
+        $user->delete();
+        return  $this->sucsessResponse(["msg" => "User Has been deleted successfully"]);
+
+    }
 }

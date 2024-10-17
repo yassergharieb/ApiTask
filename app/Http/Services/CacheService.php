@@ -8,14 +8,23 @@ class CacheService
 {
 
 
-    public function cacheStats(array $keys , $CacheDurationMinutes )
+    public function cacheStats(array $keys , $CacheDurationMinutes  , $ModelsToGetWithTrashed = [])
     {
         foreach ($keys as $key => $model) {
             Cache::forget($key);
-            Cache::remember($key , $CacheDurationMinutes , function () use ($model) {
-                $model =   "App\\Models\\" .$model;
-                return  $model::all()->count();
-            } );
+            Cache::remember($key , $CacheDurationMinutes , function () use ($model , $ModelsToGetWithTrashed) {
+
+                if(!empty($ModelsToGetWithTrashed)) {
+                   if (in_array($model , $ModelsToGetWithTrashed)) {
+                       $model =   "App\\Models\\" .$model;
+                       return $model::withTrashed()->count();
+                   }
+
+                } else {
+                    $model =   "App\\Models\\" .$model;
+                    return  $model::all()->count();
+                }
+            });
         }
     }
 

@@ -24,9 +24,7 @@ class PostObserver
             "users_count" => "User" ,
 
         ];
-        $cacheService =  new CacheService();
-        $cacheService->cacheStats($chacheKeysAndModels , 60);
-        $cacheService->cacheWithRelations([ "users_with_no_posts_count" => "User"]  , 60 , "whereDoesntHave:posts") ;
+      $this->observeForCache($chacheKeysAndModels);
     }
 
 
@@ -38,21 +36,23 @@ class PostObserver
 
     public function deleted(Post $post): void
     {
-        $this->chacheKeysAndModels = [
-            'posts_count' =>"Post"
-        ];
-        $cacheService =  new CacheService(60);
-        $cacheService->cacheStats($this->chacheKeysAndModels);
-    }
-
-
-    public function restored(Post $post): void
-    {
 
     }
 
-    public function forceDeleted(Post $post): void
-    {
+
+
+    private function observeForCache(array $chacheKeysAndModels = null) {
+
+        if(!$chacheKeysAndModels) {
+            $chacheKeysAndModels = [
+                'posts_count' =>"Post" ,
+                "users_count" => "User" ,
+                "users_with_no_posts_count" => "User"
+            ];
+        }
+
+        $this->cacheService->cacheStats($chacheKeysAndModels , 60);
+        $this->cacheService->cacheWithRelations([ "users_with_no_posts_count" => "User"]  , 60 , "whereDoesntHave:posts");
 
     }
 }

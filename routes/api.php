@@ -27,10 +27,13 @@ Route::group(['prefix' => 'users' , 'name' => 'user'] , function () {
     Route::post('/register',  [RegisterController::class , 'register']);
     Route::post('/login',  [UserLoginController::class , 'login'])->middleware('VerifiedUser');
     Route::post("/verify" , [VerificationCodeController::class , 'verify'])->name('.verification')->middleware('auth:sanctum');
+    Route::post("/delete_account" , [UserLoginController::class , "destroy"])->middleware("auth:sanctum");
 });
 
 
-Route::group(['middleware' =>  ['auth:sanctum' , 'VerifiedUser'] ] , function () {
+Route::group(['middleware' =>  ['auth:sanctum'
+    //, 'VerifiedUser'
+]] , function () {
 
     Route::resource('tags' , TagController::class)->only(['show' , "destroy" , "store"]);
     Route::post("/tags/{tag}" , [TagController::class , "update"]);

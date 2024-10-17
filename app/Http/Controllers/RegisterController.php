@@ -20,7 +20,6 @@ class RegisterController extends Controller
        $token             =  $user->createToken('auth_token')->plainTextToken;
        $response['user']  =  $user;
        $response['token'] =  $token;
-       dispatch(new CallExternalApiJob());
        return $this->sucsessResponse($response);
      }
 }

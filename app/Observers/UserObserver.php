@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Http\Services\CacheService;
+use App\Models\Post;
 use App\Models\User;
 use App\Models\VerificationCode;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use Dflydev\DotAccessData\Data;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use function Symfony\Component\Translation\t;
 
 class UserObserver
 {
@@ -35,9 +37,9 @@ class UserObserver
             "users_count" => "User" ,
             "users_with_no_posts_count" => "User"
         ];
-        $cacheService =  new CacheService();
-        $cacheService->cacheStats($chacheKeysAndModels , 60);
-        $cacheService->cacheWithRelations([ "users_with_no_posts_count" => "User"]  , 60 , "whereDoesntHave:posts") ;
+
+        $this->cacheService->cacheStats($chacheKeysAndModels , 60 );
+        $this->cacheService->cacheWithRelations([ "users_with_no_posts_count" => "User"]  , 60 , "whereDoesntHave:posts") ;
 
     }
 
@@ -53,8 +55,15 @@ class UserObserver
     public function deleted(User $user): void
     {
 
-      $this->cacheService->CacheDurationMinutes = 60;
-      $this->cacheService->cacheStats(['']);
+        foreach ($user->posts as $post) {
+            $post->forceDelete();
+        }
+
+        $this->cacheService->cacheStats([
+            'users_count' => "User" , "posts_count" =>  "Post"
+        ] ,
+            60  , ['Post']
+        );
     }
 
 

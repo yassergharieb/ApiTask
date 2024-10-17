@@ -19,7 +19,7 @@ class IsVerifiedUser
     public function handle(Request $request, Closure $next): Response
     {
        $user  =   isset($request->phone_number) ?   User::where('phone_number' , $request->phone_number)->first() : auth()->user();
-        if ( !$user->is_verified) {
+        if (!$user || !$user->is_verified) {
             return  $this->errorResponse(['msg' =>  "your account is not verified, please verify it"]);
         }
         return $next($request);

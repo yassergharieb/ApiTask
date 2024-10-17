@@ -41,8 +41,12 @@ class PostController extends Controller
     {
         $post = Post::with(['tags' => function ($query) {
                  $query->select('tags.id', 'tags.name', 'posts_tags.tag_id');
-        }])->where('id', $post->id)->first();
-      return $this->sucsessResponse(["data" => $post]);
+        }])->where(['id'=> $post->id , auth()->user()->id])->first();
+        if(is_object($post)) {
+            return $this->sucsessResponse(["data" => $post]);
+        } else {
+            return$this->errorResponse(['msg' =>  "no posts with this data"]);
+        }
     }
 
 
@@ -51,6 +55,14 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         $data          =  $request->validated();
+        $user_id =  auth()->user()->id;
+        $post    =  Post::userPosts($user_id)
+            ->with(['tags' => function ($query) {
+                $query->select('tags.id', 'tags.name', 'posts_tags.tag_id');
+            }])
+            ->where("id" , $post->id)
+            ->first();
+
         $oldCoverImage =  $post->cover_image;
 
         if ($oldCoverImage && Storage::exists($oldCoverImage)) {
@@ -66,11 +78,12 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        $bol = $post->delete();
+
+        $bol = Post::where(['user_id' => auth()->user()->id , "id" , $post->id])->first()?->delete();
         if($bol) {
             return $this->sucsessResponse(["msg" => "post deleted successfully"]);
         } else {
-            return  $this->errorResponse(["msg" => "some thing wen wrong"]);
+            return  $this->errorResponse(["msg" => "there is no post with this id to delete!"]);
         }
     }
 }
