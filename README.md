@@ -117,50 +117,7 @@ Add Sanctum's middleware to `api` middleware group in `app/Http/Kernel.php`:
   - Number of users with 0 posts.
 - The data is cached and automatically updated when changes occur to users or posts.
 
----
-
-## API Endpoints
-
-### Authentication
-
-- **POST** `/api/register`
-  - Request Body: `{ "name": "John Doe", "phone_number": "1234567890", "password": "secret" }`
-  - Response: `{ "user": { ... }, "access_token": "..." }`
-  
-- **POST** `/api/login`
-  - Request Body: `{ "phone_number": "1234567890", "password": "secret" }`
-  - Response: `{ "user": { ... }, "access_token": "..." }`
-  
-- **POST** `/api/verify`
-  - Request Body: `{ "verification_code": "123456" }`
-  - Response: `{ "message": "Account verified successfully" }`
-
-### Tags
-
-- **GET** `/api/tags`
-- **POST** `/api/tags`
-  - Request Body: `{ "name": "New Tag" }`
-- **PUT** `/api/tags/{id}`
-  - Request Body: `{ "name": "Updated Tag" }`
-- **DELETE** `/api/tags/{id}`
-
-### Posts
-
-- **GET** `/api/posts`
-- **POST** `/api/posts`
-  - Request Body: `{ "title": "New Post", "body": "Post content", "cover_image": "image.jpg", "pinned": true, "tags": [1, 2] }`
-- **GET** `/api/posts/{id}`
-- **PUT** `/api/posts/{id}`
-  - Request Body: `{ "title": "Updated Post", "body": "Updated content", "pinned": false, "tags": [1, 3] }`
-- **DELETE** `/api/posts/{id}`
-- **GET** `/api/posts/deleted`
-- **PATCH** `/api/posts/{id}/restore`
-
-### Stats
-
-- **GET** `/api/stats`
-
----
+------------------------------------
 
 ## Scheduled Jobs
 
@@ -169,15 +126,6 @@ Add Sanctum's middleware to `api` middleware group in `app/Http/Kernel.php`:
 
 ---
 
-## Notes
-
-- Ensure **Laravel Sanctum** is configured correctly to handle authentication.
-- Use **SQLite** for a lightweight database configuration during development.
-- Jobs can be scheduled using Laravel's scheduler. Define the schedules in `app/Console/Kernel.php`.
-
----
-
-To clone the project from GitHub and install the necessary dependencies using Composer, follow these steps:
 
 ### Installation and Setup
 
