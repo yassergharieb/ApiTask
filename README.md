@@ -1,207 +1,99 @@
-# Laravel API Project README
+# Extendable Order & Payment Management API (Laravel)
 
 ## Overview
-
-This project demonstrates the creation of a comprehensive API system using Laravel 10. The system includes user authentication via Laravel Sanctum, tag and post management, scheduled background jobs, and an advanced caching mechanism for performance optimization. The database uses SQLite, making it lightweight for development purposes.
+This Laravel 10 API provides JWT-secured endpoints for order and payment management. The payment layer uses a strategy pattern so you can add new gateways with minimal changes. The API is RESTful, validates input, paginates list endpoints, and enforces business rules like "payments only for confirmed orders" and "no deleting orders with payments".
 
 ## Features
+### Authentication (JWT)
+- User registration and login using JWT.
+- Tokens are signed with `JWT_SECRET` and include a configurable TTL.
 
-1. **User Authentication with Sanctum**:
-   - **Register** new users with name, phone number, and password.
-   - **Login** users and return an access token.
-   - Users are assigned a random 6-digit verification code upon registration.
-   - Only **verified** users can log in.
-   
-2. **Tag Management**:
-   - Authenticated users can manage tags (CRUD operations).
-   - Tag names must be unique.
+### Order Management
+- Create orders with customer details and line items.
+- Update orders (including items and status).
+- Delete orders **only when no payments exist**.
+- List orders with optional status filtering and pagination.
 
-3. **Post Management**:
-   - Authenticated users can manage their own posts (CRUD operations).
-   - Posts can be **soft deleted** and restored.
-   - Posts have a **many-to-many** relationship with tags.
-   - Pinned posts are displayed first.
-   
-4. **Scheduled Jobs**:
-   - A job that **force-deletes** soft-deleted posts older than 30 days.
-   - A job that makes an HTTP request to `https://randomuser.me/api/` every six hours and logs the results.
+### Payment Management
+- Process payments via strategy-driven gateways (e.g., credit_card, paypal).
+- Payments can **only** be processed for confirmed orders.
+- List payments globally or by order, with pagination.
 
-5. **Statistics**:
-   - A `/stats` API endpoint returns:
-     - Total number of users.
-     - Total number of posts.
-     - Number of users with zero posts.
-   - The results are cached and updated with changes to users or posts.
-
----
-
-## Installation and Setup
-
-### 1. Create a New Laravel Project
-```bash
-composer create-project --prefer-dist laravel/laravel ApiTask
-```
-
-### 2. Configure SQLite Database
-Open the `.env` file and set the database connection to SQLite:
-```env
-DB_CONNECTION=sqlite
-DB_DATABASE=/path_to_your_database/database.sqlite
-```
-Create the `database.sqlite` file in the `database` folder:
-```bash
-touch database/database.sqlite
-```
-
-### 3. Install Sanctum
-```bash
-composer require laravel/sanctum
-```
-Publish the Sanctum configuration:
-```bash
-php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
-php artisan migrate
-```
-Add Sanctum's middleware to `api` middleware group in `app/Http/Kernel.php`:
-```php
-'api' => [
-    \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-    'throttle:api',
-    \Illuminate\Routing\Middleware\SubstituteBindings::class,
-],
-```
-
-### 4. Create the Authentication System
-
-#### Register Route (`/register`)
-- Fields: `name`, `phone_number`, `password`
-- A 6-digit verification code is generated for every user and logged.
-- Return user data and access token after successful registration.
-
-#### Login Route (`/login`)
-- Users can only log in after verifying their account with the code sent.
-- Return user data and access token upon successful login.
-
-#### Verification Route
-- Endpoint to verify the code sent to the user.
-
-### 5. Create Tags API Resource
-- Authenticated users can **view**, **store**, **update**, and **delete** tags.
-- The `name` field is **required** and must be **unique**.
-
-### 6. Create Posts API Resource
-- Authenticated users can:
-  - View their own posts.
-  - Create new posts with:
-    - `title` (required, max 255 characters)
-    - `body` (required)
-    - `cover_image` (required on creation, optional on update)
-    - `pinned` (boolean)
-    - One or more tags (many-to-many relationship)
-  - Update and delete their posts (soft delete).
-  - View their deleted posts and restore them.
-  - Pinned posts appear first in the user's post list.
-
-### 7. Scheduled Jobs
-
-#### Daily Job to Delete Soft-Deleted Posts
-- A job runs daily to force-delete posts that were soft-deleted for more than 30 days.
-
-#### Job to Log Random User API Data
-- A job runs every 6 hours, makes an HTTP request to `https://randomuser.me/api/`, and logs the result.
-
-### 8. `/stats` API Endpoint
-- Returns:
-  - Total number of users.
-  - Total number of posts.
-  - Number of users with 0 posts.
-- The data is cached and automatically updated when changes occur to users or posts.
-
-------------------------------------
-
-## Scheduled Jobs
-
-- **Daily Job**: Deletes soft-deleted posts older than 30 days.
-- **Every 6 Hours Job**: Fetches data from `https://randomuser.me/api/` and logs the response.
-
----
-
-
-### Installation and Setup
-
-#### 1. Clone the Laravel Project from GitHub
-
-Run the following command to clone the repository:
-
-```bash
-git clone https://github.com/yassergharieb/ApiTask.git
-```
-
-Navigate into the project directory:
-
-```bash
-cd ApiTask
-```
-
-#### 2. Install the Dependencies
-
-After cloning the project, install all the necessary dependencies by running:
-
+## Setup Instructions
+### 1) Install Dependencies
 ```bash
 composer install
 ```
 
-#### 3. Set Up the Environment
+### 2) Configure Environment
+Copy `.env.example` to `.env`, then set:
+```env
+APP_KEY=base64:...
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/database.sqlite
+JWT_SECRET=your-secret
+JWT_TTL=60
 
-1. Copy the `.env.example` file to create a new `.env` file:
+# Optional gateway credentials
+CREDIT_CARD_API_KEY=your-key
+PAYPAL_CLIENT_ID=your-client-id
+PAYPAL_CLIENT_SECRET=your-client-secret
+```
 
-   ```bash
-   cp .env.example .env
-   ```
+Create the SQLite file:
+```bash
+touch database/database.sqlite
+```
 
-2. Open the `.env` file and update the database configuration to use **SQLite**. For example:
-
-   ```env
-   DB_CONNECTION=sqlite
-   DB_DATABASE=/path_to_your_database/database.sqlite
-   ```
-
-3. Create the SQLite database file:
-
-   ```bash
-   touch database/database.sqlite
-   ```
-
-#### 4. Run the Database Migrations
-
-Run the migrations to set up the database structure:
-
+### 3) Run Migrations
 ```bash
 php artisan migrate
 ```
 
-#### 5. Start the Development Server
-
-Now you can start the Laravel development server:
-
+### 4) Start the Server
 ```bash
 php artisan serve
 ```
 
-Your Laravel API project should now be up and running!
+## API Summary
+### Auth
+- `POST /api/auth/register`
+- `POST /api/auth/login`
 
-#### 6. Run Queue Worker (for jobs)
+### Orders (JWT required)
+- `GET /api/orders?status=pending|confirmed|cancelled`
+- `POST /api/orders`
+- `GET /api/orders/{order}`
+- `PUT /api/orders/{order}`
+- `DELETE /api/orders/{order}`
 
-Make sure to start the Laravel queue worker to process the scheduled jobs:
+### Payments (JWT required)
+- `POST /api/payments`
+- `GET /api/payments`
+- `GET /api/orders/{order}/payments`
 
-```bash
-php artisan queue:work
+## Payment Gateway Extensibility
+Gateways live under `app/Payments/Gateways` and implement `PaymentGatewayInterface`. To add one:
+1. Create a new gateway class that implements `process(Order $order, array $payload)`.
+2. Register it in `config/payment.php`.
+3. Add required secrets to `.env`.
+
+Example registration:
+```php
+'stripe' => [
+    'class' => App\Payments\Gateways\StripeGateway::class,
+    'config' => [
+        'api_key' => env('STRIPE_API_KEY'),
+    ],
+],
 ```
 
-#### 8. Schedule the Jobs
+## Postman Documentation
+Import `ApisTaskCollection.postman_collection.json` to view requests and example responses for:
+- Authentication
+- Orders
+- Payments
 
-To run scheduled jobs automatically, add the following to your server's crontab (or equivalent):
-
-```bash
-* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1
-```
+## Notes
+- Payment processing is simulated; set `simulate_status` to `pending`, `successful`, or `failed` to control outcomes during testing.
+- Order totals are recalculated from line items on create and update.

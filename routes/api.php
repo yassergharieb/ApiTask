@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\StatsController;
@@ -28,6 +30,18 @@ Route::group(['prefix' => 'users' , 'name' => 'user'] , function () {
     Route::post('/login',  [UserLoginController::class , 'login'])->middleware('VerifiedUser');
     Route::post("/verify" , [VerificationCodeController::class , 'verify'])->name('.verification')->middleware('auth:sanctum');
     Route::post("/delete_account" , [UserLoginController::class , "destroy"])->middleware("auth:sanctum");
+});
+
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('/register', [RegisterController::class, 'register']);
+    Route::post('/login', [UserLoginController::class, 'login']);
+});
+
+Route::group(['middleware' => ['jwt.auth']], function () {
+    Route::apiResource('orders', OrderController::class);
+    Route::get('orders/{order}/payments', [PaymentController::class, 'byOrder']);
+    Route::get('payments', [PaymentController::class, 'index']);
+    Route::post('payments', [PaymentController::class, 'store']);
 });
 
 
