@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'phone_number',
+        'is_verified',
         'password',
     ];
 
@@ -53,6 +54,11 @@ class User extends Authenticatable
     public function posts()
     {
         return $this->HasMany(Post::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
 }

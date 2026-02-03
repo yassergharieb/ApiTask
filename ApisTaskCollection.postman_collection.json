@@ -1,773 +1,183 @@
 {
-	"info": {
-		"_postman_id": "e0c4f01a-8b3a-404b-a2f6-32a66507be4f",
-		"name": "ApisTaskCollection",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21307103"
-	},
-	"item": [
-		{
-			"name": "Users",
-			"item": [
-				{
-					"name": "Register",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "yasser1258",
-									"type": "text"
-								},
-								{
-									"key": "phone_number",
-									"value": "0155664454",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "@@159357yasserA",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/users/register",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"users",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "login",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "phone_number",
-									"value": "0121158710",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "@@159357yasserA",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/users/login",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"users",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete account",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "35|CTksLvQQdnbqfaNN75KWssX6zADcu9o4y5pjhSVV6313b99c",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "phone_number",
-									"value": "0121058610",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "@@159357yasserA",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/users/delete_account",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"users",
-								"delete_account"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "verifiy",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "22|wDOsaV96cH9Mupi9wkfVQiVHphLfpvHYuL4idOwp87bca54b",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "phone_number",
-									"value": "0121058650",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "password",
-									"value": "@@159357yasserA",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "code",
-									"value": "773336",
-									"type": "text"
-								},
-								{
-									"key": "token",
-									"value": "W5zJFCzjibDkcWraxGy87Yxr1D39zuXG2024-10-1611",
-									"type": "text",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/users/verify",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"users",
-								"verify"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "tags",
-			"item": [
-				{
-					"name": "create",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "3|jXwYc24EFMMvztHX1gDxFfEMeMstp82NwMJEtnbv7c11cc20",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "tag15487",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/tags",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tags"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "edit",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "2|UsbPtvmngUmZa3WmI5plLz7RmOHYjaBAGScswPBQ9191cdf2",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "tag12",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/tags/10",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tags",
-								"10"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "index",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "2|UsbPtvmngUmZa3WmI5plLz7RmOHYjaBAGScswPBQ9191cdf2",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "tag1",
-									"type": "text",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/tags",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tags"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "show",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "2|UsbPtvmngUmZa3WmI5plLz7RmOHYjaBAGScswPBQ9191cdf2",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "tag1",
-									"type": "text",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/tags/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tags",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "2|UsbPtvmngUmZa3WmI5plLz7RmOHYjaBAGScswPBQ9191cdf2",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{base_url}}/tags/4",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tags",
-								"4"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "posts",
-			"item": [
-				{
-					"name": "create",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "35|CTksLvQQdnbqfaNN75KWssX6zADcu9o4y5pjhSVV6313b99c",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "title",
-									"value": "tag1548",
-									"type": "text"
-								},
-								{
-									"key": "body",
-									"value": "ksldlskldsklskd",
-									"type": "text"
-								},
-								{
-									"key": "is_pinned",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "cover_image",
-									"type": "file",
-									"src": "postman-cloud:///1eecc0bd-db27-4230-9fc5-a41f5ed1ec1d"
-								},
-								{
-									"key": "tags[1]",
-									"value": "5",
-									"type": "text"
-								},
-								{
-									"key": "tags[2]",
-									"value": "6",
-									"type": "text"
-								},
-								{
-									"key": "tags[3]",
-									"value": "7",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/posts",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"posts"
-							],
-							"query": [
-								{
-									"key": "title",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "body",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "cover_image",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "edit",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "2|UsbPtvmngUmZa3WmI5plLz7RmOHYjaBAGScswPBQ9191cdf2",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "title",
-									"value": "sadadas",
-									"type": "text"
-								},
-								{
-									"key": "body",
-									"value": "sdasdsadas",
-									"type": "text"
-								},
-								{
-									"key": "is_pinned",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "cover_image",
-									"type": "file",
-									"src": "/D:/emp_pics_14_2_2024/2933.JPG"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/posts/10",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"posts",
-								"10"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "show",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "22|wDOsaV96cH9Mupi9wkfVQiVHphLfpvHYuL4idOwp87bca54b",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "tag1",
-									"type": "text",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/posts/21",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"posts",
-								"21"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "index",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "2|UsbPtvmngUmZa3WmI5plLz7RmOHYjaBAGScswPBQ9191cdf2",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "tag1",
-									"type": "text",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/posts",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"posts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "32|eDWMpJVoEz6xuHFyNWTsIfsg9tn4uoEkwMbewvvBdc3de5bb",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{base_url}}/posts/79",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"posts",
-								"79"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "stats",
-			"item": [
-				{
-					"name": "stats",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "31|0Xghshrp8ZrsSuCvprwKwMdlTwi0M00JtsoMkBzj262a1e3d",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/stats",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"stats"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "c9c78a8d-7f3e-4d5b-a0e4-0f0eac6e8f4a",
+    "name": "Order & Payment API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "body": {
+              "mode": "json",
+              "raw": "{\n  \"name\": \"Acme User\",\n  \"phone_number\": \"01012345678\",\n  \"password\": \"Password@123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "body": {
+              "mode": "json",
+              "raw": "{\n  \"phone_number\": \"01012345678\",\n  \"password\": \"Password@123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "List Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders?status=pending",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders"],
+              "query": [{ "key": "status", "value": "pending" }]
+            }
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders"]
+            },
+            "body": {
+              "mode": "json",
+              "raw": "{\n  \"customer_name\": \"Acme Corp\",\n  \"customer_email\": \"billing@acme.com\",\n  \"status\": \"pending\",\n  \"items\": [\n    { \"product_name\": \"Widget\", \"quantity\": 2, \"price\": 10.5 },\n    { \"product_name\": \"Gadget\", \"quantity\": 1, \"price\": 5.0 }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "{{order_id}}"]
+            },
+            "body": {
+              "mode": "json",
+              "raw": "{\n  \"status\": \"confirmed\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Order (no payments)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "{{order_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Process Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments"]
+            },
+            "body": {
+              "mode": "json",
+              "raw": "{\n  \"order_id\": {{order_id}},\n  \"payment_method\": \"credit_card\",\n  \"simulate_status\": \"successful\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List Payments",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments"]
+            }
+          }
+        },
+        {
+          "name": "Order Payments",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}/payments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "{{order_id}}", "payments"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "jwt_token", "value": "" },
+    { "key": "order_id", "value": 1 }
+  ]
 }
